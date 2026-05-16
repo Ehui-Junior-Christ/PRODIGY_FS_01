@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Connectez-vous à votre compte Prodigy - Plateforme sécurisée">
+    <title>Connexion | Prodigy Auth</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="orb"></div><div class="orb"></div><div class="orb"></div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <!-- LEFT: Branding -->
+            <div class="auth-branding">
+                <div class="brand-logo">
+                    <div class="logo-icon">P</div>
+                    <span>Prodigy</span>
+                </div>
+                <h1>Bon retour parmi nous !</h1>
+                <p>Connectez-vous pour accéder à votre espace sécurisé et gérer votre compte en toute sérénité.</p>
+                <ul class="features-list">
+                    <li><div class="icon">🔐</div> Authentification sécurisée JWT</li>
+                    <li><div class="icon">🛡️</div> Mots de passe hachés avec BCrypt</li>
+                    <li><div class="icon">👥</div> Contrôle d'accès basé sur les rôles</li>
+                    <li><div class="icon">⚡</div> Sessions stateless performantes</li>
+                </ul>
+            </div>
+
+            <!-- RIGHT: Form -->
+            <div class="auth-form-panel">
+                <h2>Connexion</h2>
+                <p class="subtitle">Entrez vos identifiants pour continuer</p>
+
+                <div id="alertBox" class="alert">
+                    <span class="alert-icon"></span>
+                    <span class="alert-message"></span>
+                </div>
+
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="email">Adresse email</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="email" name="email" placeholder="exemple@email.com" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="motDePasse">Mot de passe</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔑</span>
+                            <input type="password" id="motDePasse" name="motDePasse" placeholder="Entrez votre mot de passe" required autocomplete="current-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('motDePasse', this)">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label><input type="checkbox" id="remember"> Se souvenir de moi</label>
+                        <a href="#">Mot de passe oublié ?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        Se connecter
+                    </button>
+                </form>
+
+                <div class="auth-link">
+                    Pas encore de compte ? <a href="register.html">Créer un compte</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const email = document.getElementById('email').value.trim();
+            const motDePasse = document.getElementById('motDePasse').value;
+
+            if (!email || !motDePasse) {
+                showAlert('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Connexion...';
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, motDePasse })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    const userData = data.data;
+                    sessionStorage.setItem('token', userData.token);
+                    sessionStorage.setItem('user', JSON.stringify(userData));
+                    showAlert('Connexion réussie ! Redirection...', 'success');
+                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+                } else {
+                    showAlert(data.message || 'Identifiants incorrects', 'error');
+                }
+            } catch (err) {
+                showAlert('Erreur de connexion au serveur', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Se connecter';
+            }
+        });
+    </script>
+</body>
+</html>

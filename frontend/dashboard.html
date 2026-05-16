@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tableau de bord Prodigy - Espace sécurisé">
+    <title>Dashboard | Prodigy Auth</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="orb"></div><div class="orb"></div><div class="orb"></div>
+    </div>
+
+    <div class="dashboard-wrapper">
+        <!-- NAVIGATION -->
+        <nav class="dashboard-nav">
+            <div class="nav-brand">
+                <div class="logo-icon">P</div>
+                <span>Prodigy</span>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <div class="user-name" id="navUserName">—</div>
+                    <div class="user-role" id="navUserRole">—</div>
+                </div>
+                <div class="avatar" id="navAvatar">?</div>
+                <button class="btn-logout" id="logoutBtn" onclick="logout()">🚪 Déconnexion</button>
+            </div>
+        </nav>
+
+        <!-- CONTENT -->
+        <div class="dashboard-content">
+            <!-- Welcome -->
+            <div class="welcome-section">
+                <h1 id="welcomeTitle">Bienvenue !</h1>
+                <p id="welcomeSubtitle">Votre espace sécurisé est prêt.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🔐</div>
+                    <div class="stat-label">Statut du compte</div>
+                    <div class="stat-value" id="statStatus" style="color: var(--accent);">Actif</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-label">Niveau d'accès</div>
+                    <div class="stat-value" id="statRole">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-label">Session actuelle</div>
+                    <div class="stat-value" style="font-size: 1.1rem;" id="statSession">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-label">Expiration token</div>
+                    <div class="stat-value" style="font-size: 1.1rem;" id="statExpiry">24h</div>
+                </div>
+            </div>
+
+            <!-- Profile -->
+            <div class="profile-section">
+                <h2>👤 Mon Profil</h2>
+                <div class="profile-grid">
+                    <div class="profile-item">
+                        <div class="label">Nom complet</div>
+                        <div class="value" id="profileName">—</div>
+                    </div>
+                    <div class="profile-item">
+                        <div class="label">Email</div>
+                        <div class="value" id="profileEmail">—</div>
+                    </div>
+                    <div class="profile-item">
+                        <div class="label">Téléphone</div>
+                        <div class="value" id="profilePhone">—</div>
+                    </div>
+                    <div class="profile-item">
+                        <div class="label">Rôle</div>
+                        <div class="value" id="profileRole">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        (function() {
+            const token = sessionStorage.getItem('token');
+            const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Verify token with backend
+            fetch('/api/auth/verify', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            }).then(r => {
+                if (!r.ok) { sessionStorage.clear(); window.location.href = 'login.html'; }
+            }).catch(() => {});
+
+            // Populate UI
+            const fullName = (user.prenom || '') + ' ' + (user.nom || '');
+            const initials = ((user.prenom || '?')[0] + (user.nom || '?')[0]).toUpperCase();
+            const role = user.role || 'USER';
+            const roleLower = role.toLowerCase();
+
+            document.getElementById('navUserName').textContent = fullName;
+            document.getElementById('navUserRole').textContent = role;
+            document.getElementById('navAvatar').textContent = initials;
+            document.getElementById('welcomeTitle').textContent = 'Bienvenue, ' + (user.prenom || 'Utilisateur') + ' !';
+            document.getElementById('welcomeSubtitle').textContent = 'Connecté en tant que ' + role + '. Votre session est sécurisée.';
+            document.getElementById('statRole').textContent = role;
+            document.getElementById('statSession').textContent = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('profileName').textContent = fullName;
+            document.getElementById('profileEmail').textContent = user.email || '—';
+            document.getElementById('profilePhone').textContent = user.telephone || 'Non renseigné';
+            document.getElementById('profileRole').innerHTML = '<span class="role-badge ' + roleLower + '">' + role + '</span>';
+        })();
+    </script>
+</body>
+</html>
