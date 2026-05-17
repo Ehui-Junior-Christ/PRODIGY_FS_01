@@ -1,70 +1,55 @@
 # PRODIGY_FS_01
 
-Listed directory PRODIGY_FS_01
-Viewed explication_projet.md:1-137
+## Système d'Authentification Prodigy (Prodigy Auth System) 🔐## 🎯 À propos du projet
+Prodigy Auth System est une solution full-stack complète et sécurisée dédiée à la gestion d'authentification des utilisateurs. Ce projet sert de fondation solide pour sécuriser l'accès aux ressources et gérer les comptes dans n'importe quelle application web moderne.
+Il permet aux utilisateurs de s'inscrire, de se connecter en toute sécurité et d'accéder à un tableau de bord protégé. L'application intègre également une gestion des permissions via des rôles définis (Utilisateur, Modérateur, Administrateur). L'architecture repose sur un modèle client-serveur stateless (sans état) utilisant des Tokens JWT (JSON Web Tokens).
+## 🛠️ Stack Technique & Caractéristiques principales
 
-Voici une description complète et structurée, spécialement rédigée pour que tu puisses la copier-coller directement dans le fichier `README.md` de ton dépôt GitHub :
+* Backend (API REST) : Java 21, Spring Boot 3, Spring Security, Spring Data JPA, Hibernate, MySQL.
+* Frontend (Interface Utilisateur) : HTML5, CSS3, JavaScript Vanille. Le design moderne adopte le style Glassmorphism avec un mode sombre natif et des animations fluides.
+* Sécurité : Hachage irréversible des mots de passe avec BCrypt, sécurisation stricte des points d'accès (endpoints), gestion des sessions par JWT, et contrôle d'accès basé sur les rôles (RBAC).
 
-***
+## 🚀 Guide d'utilisation## 📋 Prérequis
+Avant de lancer le projet localement, assurez-vous d'avoir installé :
 
-```markdown
-# Prodigy Auth System 🔐
+* Java Development Kit (JDK) 21 ou une version supérieure.
+* Un serveur MySQL actif.
+* Note : Il n'est pas nécessaire d'installer Maven globalement, le projet inclut le script mvnw (Maven Wrapper).
 
-## 🎯 À propos du projet (À quoi ça sert ?)
-**Prodigy Auth System** est une solution full-stack complète et sécurisée de gestion d'authentification. Ce projet sert de fondation solide pour gérer les utilisateurs et sécuriser l'accès aux ressources dans n'importe quelle application web moderne. 
+## ⚙️ Configuration et Installation
 
-Il permet aux utilisateurs de s'inscrire, de se connecter en toute sécurité et d'accéder à un tableau de bord protégé, tout en gérant les permissions via des rôles définis (Utilisateur, Modérateur, Administrateur). L'application repose sur une architecture client-serveur *stateless* (sans état) utilisant des **Tokens JWT** (JSON Web Tokens).
-
-**Caractéristiques principales & Stack Technique :**
-*   **Backend (API REST) :** Java 21, Spring Boot 3, Spring Security, Spring Data JPA, Hibernate, MySQL.
-*   **Frontend (Interface Utilisateur) :** HTML5, CSS3, JavaScript Vanille. Design premium moderne orienté "Glassmorphism" avec mode sombre et animations fluides.
-*   **Sécurité :** Hachage irréversible des mots de passe (BCrypt), sécurisation des endpoints, gestion des sessions par JWT, et contrôle d'accès basé sur les rôles (RBAC).
-
----
-
-## 🚀 Comment l'utiliser
-
-### 📋 Prérequis
-Pour exécuter ce projet localement, vous devez avoir installé :
-*   [Java Development Kit (JDK) 21](https://jdk.java.net/21/) ou supérieur.
-*   Un serveur [MySQL](https://www.mysql.com/) en cours d'exécution.
-*   *Note : Maven n'a pas besoin d'être installé globalement, le projet inclut l'outil `mvnw` (Maven Wrapper).*
-
-### ⚙️ Installation et Configuration
-
-1. **Cloner le dépôt :**
-   ```bash
-   git clone https://github.com/Ehui-Junior-Christ/PRODIGY_FS_01.git
+   1. Cloner le projet :
+   
+   git clone https://github.com
    cd PRODIGY_FS_01
-   ```
+   
+   2. Configurer la base de données :
+   * Lancez votre serveur MySQL.
+      * La base de données prodigy_fs_01 est configurée pour se créer automatiquement.
+      * Si nécessaire, ajustez vos identifiants de connexion MySQL locaux dans le fichier src/main/resources/application.properties :
+      
+      spring.datasource.username=votre_utilisateur_mysql
+      spring.datasource.password=votre_mot_de_passe_mysql
+      
+      3. Lancer le serveur backend :
+   Ouvrez un terminal à la racine du projet et exécutez la commande correspondante à votre système :
+   * Sur Windows :
+      
+      mvnw.cmd spring-boot:run
+      
+      * Sur Mac / Linux :
+      
+      ./mvnw spring-boot:run
+      
+      4. Accéder à l'application :
+   Le frontend est directement intégré et servi par Spring Boot. Vous n'avez pas besoin de lancer de serveur web séparé.
+   * Ouvrez votre navigateur internet.
+      * Rendez-vous sur : http://localhost:8080/ (vous serez automatiquement redirigé vers la page de connexion).
+   
+## 🧪 Scénario de test recommandé
 
-2. **Configurer la base de données :**
-   * Assurez-vous que votre serveur MySQL est lancé.
-   * La base de données `prodigy_fs_01` sera créée automatiquement grâce à la configuration.
-   * Ouvrez le fichier `src/main/resources/application.properties` (si nécessaire) pour vérifier ou modifier vos identifiants MySQL locaux :
-     ```properties
-     spring.datasource.username=root
-     spring.datasource.password=votre_mot_de_passe_mysql
-     ```
+   1. Inscription : Cliquez sur "Créer un compte". Une barre dynamique analyse et évalue la force de votre mot de passe en temps réel.
+   2. Connexion : Utilisez vos nouveaux identifiants pour vous connecter à l'application.
+   3. Vérification du Token : Ouvrez les outils de développement de votre navigateur (F12) pour observer le stockage sécurisé du Token JWT dans le sessionStorage.
+   4. Sécurité : Accédez au tableau de bord. Déconnectez-vous ou tentez d'y accéder directement sans token pour tester le blocage automatique et la redirection vers la page de connexion.
 
-3. **Lancer l'application backend :**
-   Exécutez le projet via le terminal situé à la racine du projet :
-   * **Sur Windows :**
-     ```cmd
-     mvnw.cmd spring-boot:run
-     ```
-   * **Sur Mac/Linux :**
-     ```bash
-     ./mvnw spring-boot:run
-     ```
-
-4. **Accéder à l'application :**
-   Le frontend étant directement packagé et servi par Spring Boot, il n'y a pas de serveur front-end séparé à lancer !
-   * Ouvrez votre navigateur web.
-   * Allez à l'adresse : **`http://localhost:8080/`** (vous serez automatiquement redirigé vers la page `login.html`).
-
-### 🧪 Tester l'application
-1. Cliquez sur **"Créer un compte"** pour tester le flux d'inscription. Remarquez la barre dynamique qui évalue la force de votre mot de passe en temps réel.
-2. Une fois inscrit, utilisez vos identifiants pour vous **connecter**.
-3. Observez le stockage de votre Token JWT dans le `sessionStorage` du navigateur.
-4. Accédez au **Tableau de bord sécurisé**. Si vous essayez d'y accéder sans être connecté ou avec un token invalide, le système bloquera l'accès et vous renverra au login.
