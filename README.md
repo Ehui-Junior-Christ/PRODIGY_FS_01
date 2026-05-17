@@ -20,7 +20,8 @@ Avant de lancer le projet localement, assurez-vous d'avoir installé :
 
    1. Cloner le projet :
    
-   git clone https://github.com
+   git clone https://github.com/Ehui-Junior-Christ/PRODIGY_FS_01.git
+
    cd PRODIGY_FS_01
    
    2. Configurer la base de données :
